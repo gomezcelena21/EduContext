@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduContext — Aprendizaje adaptado a tu mundo</title>
+  <meta name="description" content="Plataforma educativa con herramientas de IA adaptadas a tu profesión, tu vida y tu mundo real.">
+
+  <!-- Fuentes -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ═══ LANDING ════════════════════════════════════════════ -->
+
+<div id="landing" class="view active">
+  <nav class="nav">
+    <div class="nav-logo">EduContext</div>
+    <ul class="nav-links">
+      <li><a href="#features-section">Características</a></li>
+      <li><a href="#perfiles-section">Perfiles</a></li>
+      <li><a href="#" onclick="showProfiles(); return false;">Explorar</a></li>
+    </ul>
+    <button class="nav-cta" onclick="showProfiles()">Comenzar gratis →</button>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">✦ Plataforma educativa contextual · v2.0</div>
+    <h1>Aprende con <span>EduContext</span></h1>
+    <p class="hero-sub">Inteligencia artificial y herramientas digitales adaptadas a tu profesión, tu vida y tu mundo real.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="showProfiles()">Elegir mi perfil →</button>
+      <button class="btn-secondary" onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">¿Cómo funciona?</button>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n">15+</div><div class="stat-l">Perfiles disponibles</div></div>
+    <div class="stat"><div class="stat-n">80+</div><div class="stat-l">Herramientas IA</div></div>
+    <div class="stat"><div class="stat-n">120+</div><div class="stat-l">Prompts listos</div></div>
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Contextualizado</div></div>
+  </div>
+
+  <!-- Características -->
+
+  <div id="features-section" class="section">
+    <div class="section-label">¿Por qué EduContext?</div>
+    <h2 class="section-title">Aprendizaje que se adapta<br>a <em>tu</em> contexto</h2>
+    <p class="section-sub">No más cursos genéricos. Cada contenido está pensado para tu profesión, tu industria y tu nivel.</p>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🎯</div>
+        <h3>Contenido contextualizado</h3>
+        <p>Cada perfil tiene herramientas, prompts y recursos específicos para su área. Sin relleno ni teoría vacía.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <h3>Prompts listos para usar</h3>
+        <p>Copia y pega prompts optimizados para ChatGPT, Claude y otras IAs directamente aplicados a tu trabajo.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🛠️</div>
+        <h3>Herramientas reales</h3>
+        <p>Descubre qué IA usar, para qué sirve exactamente y cómo integrarla en tu día a día profesional.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📚</div>
+        <h3>Recursos educativos</h3>
+        <p>Cursos, comunidades, canales y plataformas seleccionadas para tu área. Nada genérico.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔄</div>
+        <h3>Aplicaciones reales</h3>
+        <p>Ejemplos concretos de cómo personas reales usan estas herramientas en su trabajo cotidiano.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌐</div>
+        <h3>Para cualquier perfil</h3>
+        <p>Desde plomeros hasta científicos de datos. La IA es para todos y EduContext lo demuestra.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview de perfiles -->
+
+  <div id="perfiles-section" class="section" style="border-top:1px solid var(--border)">
+    <div class="section-label">Perfiles disponibles</div>
+    <h2 class="section-title">¿Cuál es tu mundo?</h2>
+    <p class="section-sub">Selecciona el perfil que más se acerca a ti para recibir contenido personalizado.</p>
+    <div class="profiles-preview" id="profiles-preview"></div>
+    <div style="text-align:center; margin-top:2.5rem">
+      <button class="btn-primary" onclick="showProfiles()">Ver todos los perfiles →</button>
+    </div>
+  </div>
+</div><!-- /#landing -->
+
+<!-- ═══ SELECTOR DE PERFILES ═══════════════════════════════ -->
+
+<div id="profiles" class="view">
+  <div class="profiles-header">
+    <button class="back-btn" onclick="showLanding()">← Volver al inicio</button>
+    <h2>Elige tu perfil</h2>
+    <p>Cada perfil tiene contenido educativo real adaptado a su mundo.</p>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Buscar perfil..."
+        oninput="filterProfiles(this.value)"
+        autocomplete="off"
+      >
+    </div>
+  </div>
+  <div class="profiles-grid" id="profiles-grid"></div>
+</div><!-- /#profiles -->
+
+<!-- ═══ DASHBOARD ══════════════════════════════════════════ -->
+
+<div id="dashboard" class="view">
+
+  <!-- Sidebar -->
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="back-btn" onclick="showProfiles()">← Cambiar perfil</button>
+      <div class="sidebar-profile">
+        <div class="sidebar-emoji" id="sb-emoji"></div>
+        <div>
+          <h3 id="sb-name"></h3>
+          <p id="sb-area"></p>
+        </div>
+      </div>
+    </div>
+
+```
+<nav class="sidebar-nav">
+  <div class="sidebar-nav-label">Módulos</div>
+  <div class="nav-item active" onclick="setNav(this,'overview')">
+    <span class="icon">🏠</span>Resumen
+  </div>
+  <div class="nav-item" onclick="setNav(this,'tools')">
+    <span class="icon">🛠️</span>Herramientas
+  </div>
+  <div class="nav-item" onclick="setNav(this,'prompts')">
+    <span class="icon">⚡</span>Prompts
+  </div>
+  <div class="nav-item" onclick="setNav(this,'resources')">
+    <span class="icon">📚</span>Recursos
+  </div>
+  <div class="nav-item" onclick="setNav(this,'apps')">
+    <span class="icon">🚀</span>Aplicaciones
+  </div>
+  <div class="nav-item" onclick="setNav(this,'tips')">
+    <span class="icon">💡</span>Consejos
+  </div>
+</nav>
+
+<div class="sidebar-footer">
+  <div class="progress-label">
+    <span>Perfil completado</span>
+    <span style="color:var(--cyan); font-family:'DM Mono',monospace">4/6</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" style="width:66%"></div>
+  </div>
+</div>
+```
+
+  </aside>
+
+  <!-- Contenido principal -->
+
+  <main class="dash-main">
+
+```
+<!-- Panel: Resumen -->
+<div id="panel-overview" class="tab-panel active">
+  <div id="welcome-block"></div>
+  <div class="divider"></div>
+  <div class="section-head">
+    <h2>🛠️ Herramientas destacadas</h2>
+  </div>
+  <div class="tools-grid" id="overview-tools"></div>
+  <div class="divider"></div>
+  <div class="section-head">
+    <h2>⚡ Prompt del día</h2>
+  </div>
+  <div id="overview-prompt"></div>
+</div>
+
+<!-- Panel: Herramientas -->
+<div id="panel-tools" class="tab-panel">
+  <div class="dash-header">
+    <h1>🛠️ Herramientas &amp; IAs</h1>
+    <p>Todas las herramientas recomendadas para tu perfil, con explicaciones claras de para qué sirven.</p>
+  </div>
+  <div class="tools-grid" id="all-tools"></div>
+</div>
+
+<!-- Panel: Prompts -->
+<div id="panel-prompts" class="tab-panel">
+  <div class="dash-header">
+    <h1>⚡ Prompts listos para usar</h1>
+    <p>Cópialos directamente en ChatGPT, Claude u otras IAs. Están optimizados para tu área.</p>
+  </div>
+  <div class="prompts-list" id="all-prompts"></div>
+</div>
+
+<!-- Panel: Recursos -->
+<div id="panel-resources" class="tab-panel">
+  <div class="dash-header">
+    <h1>📚 Recursos educativos</h1>
+    <p>Plataformas, canales y comunidades seleccionadas para seguir aprendiendo en tu área.</p>
+  </div>
+  <div class="resources-grid" id="all-resources"></div>
+</div>
+
+<!-- Panel: Aplicaciones -->
+<div id="panel-apps" class="tab-panel">
+  <div class="dash-header">
+    <h1>🚀 Aplicaciones reales</h1>
+    <p>Casos de uso concretos: cómo personas reales en tu área usan estas herramientas.</p>
+  </div>
+  <div class="apps-grid" id="all-apps"></div>
+</div>
+
+<!-- Panel: Consejos -->
+<div id="panel-tips" class="tab-panel">
+  <div class="dash-header">
+    <h1>💡 Consejos prácticos</h1>
+    <p>Recomendaciones directas para empezar a aplicar IA y herramientas digitales desde hoy.</p>
+  </div>
+  <div class="tips-list" id="all-tips"></div>
+</div>
+```
+
+  </main>
+</div><!-- /#dashboard -->
+
+<!-- Scripts: primero los datos, luego la lógica -->
+
+<script src="data/profiles.js"></script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
