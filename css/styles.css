@@ -801,6 +801,77 @@ body::before {
 }
 .section-head h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; }
 
+
+/* ─── CATEGORÍAS DE PERFILES ─────────────────── */
+.category-section {
+  margin-bottom: 3rem;
+}
+.category-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.02em;
+}
+.profiles-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* ─── BOTÓN VOLVER ARRIBA ────────────────────── */
+#scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--cyan);
+  color: #000;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  box-shadow: 0 4px 20px rgba(0,255,255,0.3);
+  transition: transform 0.2s, opacity 0.3s;
+}
+#scroll-top-btn.visible {
+  display: flex;
+}
+#scroll-top-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* ─── BOTÓN SUGERIR PERFIL ───────────────────── */
+.btn-sugerir {
+  display: block;
+  text-align: center;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  background: rgba(0,255,255,0.08);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: background 0.2s;
+  margin-top: 1rem;
+}
+.btn-sugerir:hover {
+  background: rgba(0,255,255,0.15);
+}
+
+/* ─── FOOTER ─────────────────────────────────── */
+footer a { color: var(--cyan); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
 /* ─── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 768px) {
   .nav { padding: 1rem 1.5rem; }
