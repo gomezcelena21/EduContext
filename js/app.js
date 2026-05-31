@@ -18,35 +18,74 @@ function renderProfilesPreview() {
   });
 }
 
+// ── Renderizar grilla por categorías ──────────────
 function renderProfilesGrid(list) {
   var container = document.getElementById('profiles-grid');
   if (!container) return;
   container.innerHTML = '';
-  list.forEach(function(p) {
-    var tagsHTML = p.tags.map(function(t) {
-      return '<span class="tag">' + t + '</span>';
-    }).join('');
-    var div = document.createElement('div');
-    div.className = 'profile-card';
-    div.dataset.profileId = p.id;
-    div.innerHTML =
-      '<div class="profile-card-top">' +
-        '<div class="profile-emoji">' + p.emoji + '</div>' +
-        '<div><h3>' + p.name + '</h3><p>' + p.desc + '</p></div>' +
-      '</div>' +
-      '<div class="profile-tags">' + tagsHTML + '</div>' +
-      '<span class="profile-arrow">&#8594;</span>';
-    container.appendChild(div);
+
+  // Si hay búsqueda activa, mostrar sin categorías
+  var searchInput = document.getElementById('search-input');
+  var isSearching = searchInput && searchInput.value.trim().length > 0;
+
+  if (isSearching || !window.categories) {
+    // Vista plana (búsqueda)
+    list.forEach(function(p) {
+      container.appendChild(buildProfileCard(p));
+    });
+    return;
+  }
+
+  // Vista por categorías
+  categories.forEach(function(cat) {
+    var catProfiles = list.filter(function(p) {
+      return cat.ids.includes(p.id);
+    });
+    if (catProfiles.length === 0) return;
+
+    var section = document.createElement('div');
+    section.className = 'category-section';
+
+    var title = document.createElement('h2');
+    title.className = 'category-title';
+    title.textContent = cat.label;
+    section.appendChild(title);
+
+    var grid = document.createElement('div');
+    grid.className = 'profiles-category-grid';
+    catProfiles.forEach(function(p) {
+      grid.appendChild(buildProfileCard(p));
+    });
+    section.appendChild(grid);
+    container.appendChild(section);
   });
 }
 
+function buildProfileCard(p) {
+  var tagsHTML = p.tags.map(function(t) {
+    return '<span class="tag">' + t + '</span>';
+  }).join('');
+  var div = document.createElement('div');
+  div.className = 'profile-card';
+  div.dataset.profileId = p.id;
+  div.innerHTML =
+    '<div class="profile-card-top">' +
+      '<div class="profile-emoji">' + p.emoji + '</div>' +
+      '<div><h3>' + p.name + '</h3><p>' + p.desc + '</p></div>' +
+    '</div>' +
+    '<div class="profile-tags">' + tagsHTML + '</div>' +
+    '<span class="profile-arrow">&#8594;</span>';
+  return div;
+}
+
 function filterProfiles(query) {
-  var q = query.toLowerCase();
-  var filtered = profiles.filter(function(p) {
+  var q = query.toLowerCase().trim();
+  var filtered = q.length === 0 ? profiles : profiles.filter(function(p) {
     return (
       p.name.toLowerCase().includes(q) ||
       p.desc.toLowerCase().includes(q) ||
-      p.tags.some(function(t) { return t.toLowerCase().includes(q); })
+      p.tags.some(function(t) { return t.toLowerCase().includes(q); }) ||
+      (p.area && p.area.toLowerCase().includes(q))
     );
   });
   renderProfilesGrid(filtered);
@@ -73,7 +112,6 @@ function renderTool(t) {
 }
 
 function renderPrompt(pr) {
-  // Escapar HTML para mostrar el texto y guardarlo en data-body sin romper atributos
   var safeBody = pr.body
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -93,11 +131,9 @@ function renderPrompt(pr) {
 }
 
 function copyText(btn, encodedText) {
-  // Decodificar entidades HTML antes de copiar al portapapeles
   var ta = document.createElement('textarea');
   ta.innerHTML = encodedText;
   var decoded = ta.value;
-
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(decoded).then(function() {
       markCopied(btn);
@@ -222,6 +258,8 @@ function showProfiles() {
   document.getElementById('profiles').classList.add('active');
   document.getElementById('dashboard').classList.remove('active');
   document.getElementById('dashboard').style.display = 'none';
+  var si = document.getElementById('search-input');
+  if (si) si.value = '';
   renderProfilesGrid(profiles);
 }
 
@@ -245,26 +283,42 @@ function setNav(el, panel) {
 }
 
 // ═══════════════════════════════════════════════════
+//   BOTÓN VOLVER ARRIBA
+// ═══════════════════════════════════════════════════
+
+function initScrollTop() {
+  var btn = document.getElementById('scroll-top-btn');
+  if (!btn) return;
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 300) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  });
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+// ═══════════════════════════════════════════════════
 //   EVENT DELEGATION
 // ═══════════════════════════════════════════════════
 
 document.addEventListener('click', function(e) {
 
-  // Perfil en preview landing
   var mini = e.target.closest('.profile-mini');
   if (mini && mini.dataset.profileId) {
     enterProfile(mini.dataset.profileId);
     return;
   }
 
-  // Card en selector de perfiles
   var card = e.target.closest('.profile-card');
   if (card && card.dataset.profileId) {
     enterProfile(card.dataset.profileId);
     return;
   }
 
-  // Botón copiar prompt
   var copyBtn = e.target.closest('.copy-btn');
   if (copyBtn && copyBtn.dataset.body) {
     copyText(copyBtn, copyBtn.dataset.body);
@@ -278,4 +332,5 @@ document.addEventListener('click', function(e) {
 
 document.addEventListener('DOMContentLoaded', function() {
   renderProfilesPreview();
+  initScrollTop();
 });
