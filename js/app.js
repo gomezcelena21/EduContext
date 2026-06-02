@@ -124,27 +124,35 @@ function filterByCategory(btn, catId) {
   document.querySelectorAll('.cat-filter').forEach(function(b) {
     b.classList.remove('active');
   });
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
   renderProfilesGrid(profiles);
-  // Scroll arriba del grid
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Desde el landing: ir a perfiles filtrados por categoría
 function showProfilesByCategory(catId) {
   activeCategoryFilter = catId;
-  showProfiles();
-  // Activar el botón de filtro correspondiente
+  // Mostrar la vista de perfiles
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('profiles').classList.add('active');
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('dashboard').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Limpiar búsqueda
+  var si = document.getElementById('search-input');
+  if (si) si.value = '';
+  // Activar botón de filtro y renderizar
   setTimeout(function() {
     var btns = document.querySelectorAll('.cat-filter');
     btns.forEach(function(b) { b.classList.remove('active'); });
     btns.forEach(function(b) {
-      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + catId + "'")) {
+      var onclick = b.getAttribute('onclick') || '';
+      if (onclick.indexOf("'" + catId + "'") !== -1) {
         b.classList.add('active');
       }
     });
     renderProfilesGrid(profiles);
-  }, 100);
+  }, 50);
 }
 
 function renderTool(t) {
@@ -275,13 +283,20 @@ function showLanding() {
 }
 
 function showProfiles() {
+  activeCategoryFilter = null;
   document.getElementById('landing').classList.remove('active');
   document.getElementById('profiles').classList.add('active');
   document.getElementById('dashboard').classList.remove('active');
   document.getElementById('dashboard').style.display = 'none';
   var si = document.getElementById('search-input');
   if (si) si.value = '';
-  renderProfilesGrid(profiles);
+  // Resetear filtros visuales
+  setTimeout(function() {
+    var btns = document.querySelectorAll('.cat-filter');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    if (btns[0]) btns[0].classList.add('active');
+    renderProfilesGrid(profiles);
+  }, 50);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
