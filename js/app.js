@@ -1,6 +1,24 @@
 // ═══════════════════════════════════════════════════
+//   MENÚ HAMBURGUESA
+// ═══════════════════════════════════════════════════
+
+function openMenu() {
+  document.getElementById('hamburger-menu').classList.add('open');
+  document.getElementById('menu-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMenu() {
+  document.getElementById('hamburger-menu').classList.remove('open');
+  document.getElementById('menu-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════
 //   RENDER FUNCTIONS
 // ═══════════════════════════════════════════════════
+
+var activeCategoryFilter = null;
 
 function renderProfilesPreview() {
   var container = document.getElementById('profiles-preview');
@@ -18,18 +36,15 @@ function renderProfilesPreview() {
   });
 }
 
-// ── Renderizar grilla por categorías ──────────────
 function renderProfilesGrid(list) {
   var container = document.getElementById('profiles-grid');
   if (!container) return;
   container.innerHTML = '';
 
-  // Si hay búsqueda activa, mostrar sin categorías
   var searchInput = document.getElementById('search-input');
   var isSearching = searchInput && searchInput.value.trim().length > 0;
 
   if (isSearching || !window.categories) {
-    // Vista plana (búsqueda)
     list.forEach(function(p) {
       container.appendChild(buildProfileCard(p));
     });
@@ -38,6 +53,9 @@ function renderProfilesGrid(list) {
 
   // Vista por categorías
   categories.forEach(function(cat) {
+    // Si hay filtro activo, solo mostrar esa categoría
+    if (activeCategoryFilter && cat.id !== activeCategoryFilter) return;
+
     var catProfiles = list.filter(function(p) {
       return cat.ids.includes(p.id);
     });
@@ -48,7 +66,7 @@ function renderProfilesGrid(list) {
 
     var title = document.createElement('h2');
     title.className = 'category-title';
-    title.textContent = cat.label;
+    title.textContent = cat.label + ' (' + catProfiles.length + ')';
     section.appendChild(title);
 
     var grid = document.createElement('div');
@@ -80,6 +98,14 @@ function buildProfileCard(p) {
 
 function filterProfiles(query) {
   var q = query.toLowerCase().trim();
+  activeCategoryFilter = null;
+  // Resetear botones de filtro
+  document.querySelectorAll('.cat-filter').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  var allBtn = document.querySelector('.cat-filter');
+  if (allBtn) allBtn.classList.add('active');
+
   var filtered = q.length === 0 ? profiles : profiles.filter(function(p) {
     return (
       p.name.toLowerCase().includes(q) ||
@@ -89,6 +115,36 @@ function filterProfiles(query) {
     );
   });
   renderProfilesGrid(filtered);
+}
+
+function filterByCategory(btn, catId) {
+  activeCategoryFilter = catId;
+  var si = document.getElementById('search-input');
+  if (si) si.value = '';
+  document.querySelectorAll('.cat-filter').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  renderProfilesGrid(profiles);
+  // Scroll arriba del grid
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Desde el landing: ir a perfiles filtrados por categoría
+function showProfilesByCategory(catId) {
+  activeCategoryFilter = catId;
+  showProfiles();
+  // Activar el botón de filtro correspondiente
+  setTimeout(function() {
+    var btns = document.querySelectorAll('.cat-filter');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    btns.forEach(function(b) {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + catId + "'")) {
+        b.classList.add('active');
+      }
+    });
+    renderProfilesGrid(profiles);
+  }, 100);
 }
 
 function renderTool(t) {
@@ -135,11 +191,7 @@ function copyText(btn, encodedText) {
   ta.innerHTML = encodedText;
   var decoded = ta.value;
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(decoded).then(function() {
-      markCopied(btn);
-    }).catch(function() {
-      fallbackCopy(decoded, btn);
-    });
+    navigator.clipboard.writeText(decoded).then(function() { markCopied(btn); }).catch(function() { fallbackCopy(decoded, btn); });
   } else {
     fallbackCopy(decoded, btn);
   }
@@ -182,61 +234,29 @@ function enterProfile(id) {
       '</div>' +
     '</div>';
 
-  document.getElementById('overview-tools').innerHTML =
-    p.tools.slice(0, 3).map(renderTool).join('');
-
-  document.getElementById('overview-prompt').innerHTML =
-    renderPrompt(p.prompts[0]);
-
-  document.getElementById('all-tools').innerHTML =
-    p.tools.map(renderTool).join('');
-
-  document.getElementById('all-prompts').innerHTML =
-    p.prompts.map(renderPrompt).join('');
+  document.getElementById('overview-tools').innerHTML = p.tools.slice(0, 3).map(renderTool).join('');
+  document.getElementById('overview-prompt').innerHTML = renderPrompt(p.prompts[0]);
+  document.getElementById('all-tools').innerHTML = p.tools.map(renderTool).join('');
+  document.getElementById('all-prompts').innerHTML = p.prompts.map(renderPrompt).join('');
 
   document.getElementById('all-resources').innerHTML =
     p.resources.map(function(r) {
-      return (
-        '<div class="resource-card">' +
-          '<div class="resource-icon">' + r.icon + '</div>' +
-          '<div>' +
-            '<div class="resource-type">' + r.type + '</div>' +
-            '<h4>' + r.name + '</h4>' +
-            '<p>' + r.desc + '</p>' +
-          '</div>' +
-        '</div>'
-      );
+      return '<div class="resource-card"><div class="resource-icon">' + r.icon + '</div><div><div class="resource-type">' + r.type + '</div><h4>' + r.name + '</h4><p>' + r.desc + '</p></div></div>';
     }).join('');
 
   document.getElementById('all-apps').innerHTML =
     p.apps.map(function(a) {
-      return (
-        '<div class="app-card">' +
-          '<div class="app-label">Caso de uso</div>' +
-          '<h4>' + a.title + '</h4>' +
-          '<p>' + a.desc + '</p>' +
-          '<div class="example">' + a.example + '</div>' +
-        '</div>'
-      );
+      return '<div class="app-card"><div class="app-label">Caso de uso</div><h4>' + a.title + '</h4><p>' + a.desc + '</p><div class="example">' + a.example + '</div></div>';
     }).join('');
 
   document.getElementById('all-tips').innerHTML =
     p.tips.map(function(t, i) {
-      return (
-        '<div class="tip">' +
-          '<div class="tip-num">' + (i + 1) + '</div>' +
-          '<p>' + t.text + '</p>' +
-        '</div>'
-      );
+      return '<div class="tip"><div class="tip-num">' + (i + 1) + '</div><p>' + t.text + '</p></div>';
     }).join('');
 
-  document.querySelectorAll('.nav-item').forEach(function(el) {
-    el.classList.remove('active');
-  });
+  document.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('active'); });
   document.querySelectorAll('.nav-item')[0].classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(function(el) {
-    el.classList.remove('active');
-  });
+  document.querySelectorAll('.tab-panel').forEach(function(el) { el.classList.remove('active'); });
   document.getElementById('panel-overview').classList.add('active');
 
   showDashboard();
@@ -251,6 +271,7 @@ function showLanding() {
   document.getElementById('profiles').classList.remove('active');
   document.getElementById('dashboard').classList.remove('active');
   document.getElementById('dashboard').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showProfiles() {
@@ -261,6 +282,7 @@ function showProfiles() {
   var si = document.getElementById('search-input');
   if (si) si.value = '';
   renderProfilesGrid(profiles);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showDashboard() {
@@ -268,16 +290,13 @@ function showDashboard() {
   document.getElementById('profiles').classList.remove('active');
   document.getElementById('dashboard').classList.add('active');
   document.getElementById('dashboard').style.display = 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function setNav(el, panel) {
-  document.querySelectorAll('.nav-item').forEach(function(i) {
-    i.classList.remove('active');
-  });
+  document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.remove('active'); });
   el.classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(function(p) {
-    p.classList.remove('active');
-  });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('panel-' + panel).classList.add('active');
   document.querySelector('.dash-main').scrollTop = 0;
 }
@@ -290,11 +309,7 @@ function initScrollTop() {
   var btn = document.getElementById('scroll-top-btn');
   if (!btn) return;
   window.addEventListener('scroll', function() {
-    if (window.scrollY > 300) {
-      btn.classList.add('visible');
-    } else {
-      btn.classList.remove('visible');
-    }
+    btn.classList.toggle('visible', window.scrollY > 300);
   });
   btn.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -306,24 +321,14 @@ function initScrollTop() {
 // ═══════════════════════════════════════════════════
 
 document.addEventListener('click', function(e) {
-
   var mini = e.target.closest('.profile-mini');
-  if (mini && mini.dataset.profileId) {
-    enterProfile(mini.dataset.profileId);
-    return;
-  }
+  if (mini && mini.dataset.profileId) { enterProfile(mini.dataset.profileId); return; }
 
   var card = e.target.closest('.profile-card');
-  if (card && card.dataset.profileId) {
-    enterProfile(card.dataset.profileId);
-    return;
-  }
+  if (card && card.dataset.profileId) { enterProfile(card.dataset.profileId); return; }
 
   var copyBtn = e.target.closest('.copy-btn');
-  if (copyBtn && copyBtn.dataset.body) {
-    copyText(copyBtn, copyBtn.dataset.body);
-    return;
-  }
+  if (copyBtn && copyBtn.dataset.body) { copyText(copyBtn, copyBtn.dataset.body); return; }
 });
 
 // ═══════════════════════════════════════════════════
