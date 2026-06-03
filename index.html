@@ -20,8 +20,8 @@
 <body>
 
 <!-- ═══ MENÚ HAMBURGUESA ════════════════════════════════════ -->
-<div id="menu-overlay" onclick="closeMenu()" style="display:none"></div>
-<aside id="hamburger-menu" style="transform:translateX(-100%)">
+<div id="menu-overlay" onclick="closeMenu()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);"></div>
+<aside id="hamburger-menu" style="position:fixed;top:0;left:-320px;width:280px;height:100vh;z-index:300;background:#1a1f2e;border-right:1px solid #2a2f3e;display:flex;flex-direction:column;overflow-y:auto;transition:left 0.35s ease;">
   <div class="hmenu-top">
     <span class="hmenu-logo">EduContext</span>
     <button class="hmenu-close" onclick="closeMenu()">✕</button>
