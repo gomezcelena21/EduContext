@@ -874,10 +874,12 @@ footer a:hover { text-decoration: underline; }
 
 /* ─── RESPONSIVE ─────────────────────────────── */
 
+
 /* ─── MENÚ HAMBURGUESA ───────────────────────── */
 .hamburger-btn {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 5px;
   background: none;
   border: none;
@@ -885,6 +887,8 @@ footer a:hover { text-decoration: underline; }
   padding: .5rem;
   border-radius: var(--r);
   transition: background .2s;
+  width: 36px;
+  height: 36px;
 }
 .hamburger-btn:hover { background: var(--surface); }
 .hamburger-btn span {
@@ -923,79 +927,6 @@ footer a:hover { text-decoration: underline; }
 }
 #hamburger-menu.open { transform: translateX(0); }
 
-.hmenu-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.hmenu-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.2rem;
-  background: linear-gradient(135deg, var(--cyan), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hmenu-close {
-  background: none;
-  border: none;
-  color: var(--text3);
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: .4rem;
-  border-radius: var(--r);
-  transition: all .2s;
-}
-.hmenu-close:hover { background: var(--surface); color: var(--text); }
-
-.hmenu-nav {
-  flex: 1;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: .2rem;
-}
-.hmenu-nav a {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  padding: .75rem 1rem;
-  border-radius: var(--r);
-  color: var(--text2);
-  font-size: .9rem;
-  text-decoration: none;
-  transition: all .2s;
-  border: 1px solid transparent;
-  font-weight: 500;
-}
-.hmenu-nav a:hover {
-  background: var(--surface);
-  color: var(--text);
-  border-color: var(--border);
-}
-
-.hmenu-footer {
-  padding: 1rem 1.2rem;
-  border-top: 1px solid var(--border);
-}
-.hmenu-suggest {
-  display: block;
-  text-align: center;
-  padding: .75rem 1rem;
-  border-radius: var(--r);
-  background: var(--cyan-dim);
-  border: 1px solid var(--border2);
-  color: var(--cyan);
-  font-size: .85rem;
-  text-decoration: none;
-  transition: background .2s;
-  font-weight: 600;
-}
-.hmenu-suggest:hover { background: rgba(100,210,255,.18); }
-
 /* ─── MÓDULOS EMPEZAR CON IA ─────────────────── */
 .ia-section { border-top: 1px solid var(--border); }
 
@@ -1022,6 +953,7 @@ footer a:hover { text-decoration: underline; }
   background: radial-gradient(ellipse 60% 40% at 0% 0%, var(--cyan-dim), transparent);
   opacity: 0;
   transition: opacity .3s;
+  pointer-events: none;
 }
 .modulo-card:hover {
   border-color: var(--border2);
@@ -1035,7 +967,7 @@ footer a:hover { text-decoration: underline; }
   border-color: var(--border2);
   grid-column: span 1;
 }
-.modulo-card.modulo-cta .btn-primary { margin-top: 1.5rem; }
+.modulo-card.modulo-cta .btn-primary { margin-top: 1.5rem; position: relative; z-index: 2; }
 
 .modulo-num {
   font-family: 'DM Mono', monospace;
@@ -1056,6 +988,7 @@ footer a:hover { text-decoration: underline; }
   font-size: 1.05rem;
   margin-bottom: .8rem;
   position: relative;
+  z-index: 1;
 }
 .modulo-card p {
   color: var(--text2);
@@ -1383,3 +1316,7 @@ footer a:hover { text-decoration: underline; }
   .stat { border-right: none; border-bottom: 1px solid var(--border); }
   .stat:last-child { border-bottom: none; }
 }
+
+/* Fix clicks en módulos IA */
+.modulo-card > * { position: relative; z-index: 1; }
+.modulo-card button { position: relative; z-index: 2; cursor: pointer; }
