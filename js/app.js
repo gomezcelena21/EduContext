@@ -3,14 +3,18 @@
 // ═══════════════════════════════════════════════════
 
 function openMenu() {
-  document.getElementById('hamburger-menu').classList.add('open');
-  document.getElementById('menu-overlay').classList.add('open');
+  var menu = document.getElementById('hamburger-menu');
+  var overlay = document.getElementById('menu-overlay');
+  menu.style.left = '0';
+  overlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
 }
 
 function closeMenu() {
-  document.getElementById('hamburger-menu').classList.remove('open');
-  document.getElementById('menu-overlay').classList.remove('open');
+  var menu = document.getElementById('hamburger-menu');
+  var overlay = document.getElementById('menu-overlay');
+  menu.style.left = '-320px';
+  overlay.style.display = 'none';
   document.body.style.overflow = '';
 }
 
