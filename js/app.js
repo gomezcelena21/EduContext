@@ -44,7 +44,7 @@ function renderProfilesGrid(list) {
   var searchInput = document.getElementById('search-input');
   var isSearching = searchInput && searchInput.value.trim().length > 0;
 
-  if (isSearching || !window.categories) {
+  if (isSearching || typeof categories === 'undefined') {
     list.forEach(function(p) {
       container.appendChild(buildProfileCard(p));
     });
@@ -57,7 +57,7 @@ function renderProfilesGrid(list) {
     if (activeCategoryFilter && cat.id !== activeCategoryFilter) return;
 
     var catProfiles = list.filter(function(p) {
-      return cat.ids.includes(p.id);
+      return cat.ids.indexOf(p.id) !== -1;
     });
     if (catProfiles.length === 0) return;
 
@@ -108,10 +108,10 @@ function filterProfiles(query) {
 
   var filtered = q.length === 0 ? profiles : profiles.filter(function(p) {
     return (
-      p.name.toLowerCase().includes(q) ||
-      p.desc.toLowerCase().includes(q) ||
-      p.tags.some(function(t) { return t.toLowerCase().includes(q); }) ||
-      (p.area && p.area.toLowerCase().includes(q))
+      p.name.toLowerCase().indexOf(q) !== -1 ||
+      p.desc.toLowerCase().indexOf(q) !== -1 ||
+      p.tags.some(function(t) { return t.toLowerCase().indexOf(q) !== -1; }) ||
+      (p.area && p.area.toLowerCase().indexOf(q) !== -1)
     );
   });
   renderProfilesGrid(filtered);
