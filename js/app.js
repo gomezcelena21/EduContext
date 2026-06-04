@@ -3,20 +3,27 @@
 // ═══════════════════════════════════════════════════
 
 function openMenu() {
-  var menu = document.getElementById('hamburger-menu');
-  var overlay = document.getElementById('menu-overlay');
-  menu.style.left = '0';
-  overlay.style.display = 'block';
-  document.body.style.overflow = 'hidden';
+  var dropdown = document.getElementById('nav-dropdown');
+  if (!dropdown) return;
+  var isOpen = dropdown.style.display === 'block';
+  dropdown.style.display = isOpen ? 'none' : 'block';
 }
 
 function closeMenu() {
-  var menu = document.getElementById('hamburger-menu');
-  var overlay = document.getElementById('menu-overlay');
-  menu.style.left = '-320px';
-  overlay.style.display = 'none';
-  document.body.style.overflow = '';
+  var dropdown = document.getElementById('nav-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
 }
+
+// Cerrar menú al hacer clic fuera
+document.addEventListener('click', function(e) {
+  var dropdown = document.getElementById('nav-dropdown');
+  var btn = document.querySelector('.hamburger-btn');
+  if (dropdown && dropdown.style.display === 'block') {
+    if (!dropdown.contains(e.target) && btn && !btn.contains(e.target)) {
+      dropdown.style.display = 'none';
+    }
+  }
+});
 
 // ═══════════════════════════════════════════════════
 //   RENDER FUNCTIONS
