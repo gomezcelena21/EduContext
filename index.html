@@ -20,24 +20,18 @@
 <body>
 
 <!-- ═══ MENÚ HAMBURGUESA ════════════════════════════════════ -->
-<div id="menu-overlay" onclick="closeMenu()" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);"></div>
-<aside id="hamburger-menu" style="position:fixed;top:0;left:-320px;width:280px;height:100vh;z-index:300;background:#1a1f2e;border-right:1px solid #2a2f3e;display:flex;flex-direction:column;overflow-y:auto;transition:left 0.35s ease;">
-  <div class="hmenu-top">
-    <span class="hmenu-logo">EduContext</span>
-    <button class="hmenu-close" onclick="closeMenu()">✕</button>
-  </div>
-  <nav class="hmenu-nav">
-    <a href="#" onclick="closeMenu(); showLanding(); return false;">🏠 Inicio</a>
-    <a href="#ia-section" onclick="closeMenu(); showLanding(); setTimeout(()=>document.getElementById('ia-section').scrollIntoView({behavior:'smooth'}),300); return false;">🤖 Empezar con IA</a>
-    <a href="#categorias-section" onclick="closeMenu(); showLanding(); setTimeout(()=>document.getElementById('categorias-section').scrollIntoView({behavior:'smooth'}),300); return false;">📂 Categorías</a>
-    <a href="#" onclick="closeMenu(); showProfiles(); return false;">🔍 Explorar perfiles</a>
-    <a href="#participar-section" onclick="closeMenu(); showLanding(); setTimeout(()=>document.getElementById('participar-section').scrollIntoView({behavior:'smooth'}),300); return false;">💬 Participar</a>
-    <a href="#sobre-section" onclick="closeMenu(); showLanding(); setTimeout(()=>document.getElementById('sobre-section').scrollIntoView({behavior:'smooth'}),300); return false;">ℹ️ Sobre EduContext</a>
+<!-- MENÚ DESPLEGABLE -->
+<div id="nav-dropdown" style="display:none;position:fixed;top:60px;left:0;right:0;z-index:999;background:#1a1f2e;border-bottom:2px solid #2a2f3e;padding:1rem 1.5rem;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+  <nav style="display:flex;flex-direction:column;gap:0.5rem;">
+    <a href="#" onclick="closeMenu(); showLanding(); return false;" style="color:#e2e8f0;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:500;display:block;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">🏠 Inicio</a>
+    <a href="#" onclick="closeMenu(); showLanding(); setTimeout(function(){var el=document.getElementById('ia-section');if(el)el.scrollIntoView({behavior:'smooth'});},400); return false;" style="color:#e2e8f0;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:500;display:block;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">🤖 Empezar con IA</a>
+    <a href="#" onclick="closeMenu(); showLanding(); setTimeout(function(){var el=document.getElementById('categorias-section');if(el)el.scrollIntoView({behavior:'smooth'});},400); return false;" style="color:#e2e8f0;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:500;display:block;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">📂 Categorías</a>
+    <a href="#" onclick="closeMenu(); showProfiles(); return false;" style="color:#e2e8f0;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:500;display:block;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">🔍 Explorar perfiles</a>
+    <a href="#" onclick="closeMenu(); showLanding(); setTimeout(function(){var el=document.getElementById('participar-section');if(el)el.scrollIntoView({behavior:'smooth'});},400); return false;" style="color:#e2e8f0;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:500;display:block;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">💬 Participar</a>
+    <a href="#" onclick="closeMenu(); showLanding(); setTimeout(function(){var el=document.getElementById('sobre-section');if(el)el.scrollIntoView({behavior:'smooth'});},400); return false;" style="color:#e2e8f0;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:500;display:block;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">ℹ️ Sobre EduContext</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfXTHajgp5SBA2nBEB9XsKcWV3fCvSxNCbvtkpeQhLTg5xMAg/viewform" target="_blank" onclick="closeMenu();" style="color:#64d2ff;text-decoration:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.95rem;font-weight:600;display:block;margin-top:0.5rem;border:1px solid #2a2f3e;" onmouseover="this.style.background='#2a2f3e'" onmouseout="this.style.background='transparent'">💬 Sugerí un perfil</a>
   </nav>
-  <div class="hmenu-footer">
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfXTHajgp5SBA2nBEB9XsKcWV3fCvSxNCbvtkpeQhLTg5xMAg/viewform" target="_blank" class="hmenu-suggest">💬 Sugerí un perfil</a>
-  </div>
-</aside>
+</div>
 
 <!-- ═══ LANDING ════════════════════════════════════════════ -->
 <div id="landing" class="view active">
